@@ -9,6 +9,7 @@ from tkinter import (Button, Entry, Frame, IntVar, Label, Listbox, Menu,
                      StringVar, Tk, filedialog)
 from tkinter.ttk import Scrollbar, Treeview
 
+from menu import AppMenu
 
 class ftp_client():
     def __init__(self):
@@ -30,103 +31,116 @@ class ftp_client():
         self.filelist_local = None
         self.filelist_remote = None
 
+        self.toolbar_box = None  # 工具按钮栏
+        self.quickbar_box = None  # 快速连接栏
+        self.footer_box = None  # 底部状态栏
+        self.content_box = None  # 主要内容视图容器
+        self.remote_box = None  # 远程服务端资源
+        self.local_box = None  # 本地资源
+
         self.ftp_connect = FTP()
         self.init_view()
-        root.mainloop()
 
+        root.mainloop()
 
     def init_view(self):
         """界面"""
-        self.init_menu()
 
-        self.btn_box = Frame(self.root, relief="ridge", borderwidth=0)
-        self.btn_box.pack(fill="x", expand=None, side="top", anchor="n")
-
-        self.head_box = Frame(self.root, relief="ridge", borderwidth=0)
-        self.head_box.pack(fill="x", expand=None, side="top", anchor="n")
-
-        self.content_box = Frame(
-            self.root, relief="ridge", borderwidth=0, bd=1)
-        self.content_box.pack(fill="both", expand=True)
-
-        self.remote_box = Frame(
-            self.content_box, relief="ridge", borderwidth=0)
-        self.remote_box.pack(fill="both", expand=True, side="right")
-
-        self.local_box = Frame(self.content_box, relief="ridge", borderwidth=0)
-        self.local_box.pack(fill="both", expand=True, side="left")
-
-        self.footer_box = Frame(self.root, relief="ridge", borderwidth=0, bd=1)
-        self.footer_box.pack(fill="x", expand=None, side="bottom", anchor="s")
-
-        self.init_btns()
+        AppMenu(self.root)
+        self.init_frame()
+        self.init_toolbar()
         self.init_header()
         self.init_remote()
         self.init_local()
         self.init_footer()
 
+    def init_frame(self):
+        """基本框架"""
+
+        # 工具按钮栏
+        self.toolbar_box = Frame(self.root, relief="ridge", bd=1)
+        self.toolbar_box.pack(fill="x", expand=None, side="top", anchor="n")
+
+        # 快速连接栏
+        self.quickbar_box = Frame(self.root, relief="ridge", bd=1)
+        self.quickbar_box.pack(fill="x", expand=None, side="top", anchor="n")
+
+        # 底部状态栏
+        self.footer_box = Frame(self.root, relief="ridge", bd=1)
+        self.footer_box.pack(fill="x", expand=None, side="bottom", anchor="s")
+
+        # 主要内容视图容器
+        self.content_box = Frame(self.root, relief="ridge", bd=1)
+        self.content_box.pack(fill="both", expand=True)
+
+        # 远程服务端文件列表
+        self.remote_box = Frame(self.content_box, relief="ridge", bd=0)
+        self.remote_box.pack(fill="both", expand=True, side="right")
+
+        # 本地文件列表
+        self.local_box = Frame(self.content_box, relief="ridge", bd=0)
+        self.local_box.pack(fill="both", expand=True, side="left")
+
     def init_header(self):
         """头部栏"""
 
-        label_ip = Label(self.head_box, text="主机:")
-        label_ip.pack(side="left")
-        self.entry_ip = Entry(
-            self.head_box, textvariable=self.var_address, width=15)
+        Label(self.quickbar_box, text="主机:").pack(side="left")
+        self.entry_ip = Entry(self.quickbar_box, textvariable=self.var_address)
+        self.entry_ip["width"] = 15
         self.entry_ip.pack(side="left")
 
-        label_user = Label(self.head_box, text="账号:")
-        label_user.pack(side="left")
-        self.entry_user = Entry(self.head_box, width=15)
+        Label(self.quickbar_box, text="账号:").pack(side="left")
+        self.entry_user = Entry(self.quickbar_box, width=15)
         self.entry_user.pack(side="left")
 
-        label_passwd = Label(self.head_box, text="密码:")
-        label_passwd.pack(side="left")
-        self.entry_passwd = Entry(self.head_box, show="*", width=15)
+        Label(self.quickbar_box, text="密码:").pack(side="left")
+        self.entry_passwd = Entry(self.quickbar_box, show="*", width=15)
         self.entry_passwd.pack(side="left")
 
-        label_port = Label(self.head_box, text="端口:")
-        label_port.pack(side="left")
-        self.entry_port = Entry(
-            self.head_box, textvariable=self.var_port, width=5)
+        Label(self.quickbar_box, text="端口:").pack(side="left")
+        self.entry_port = Entry(self.quickbar_box, textvariable=self.var_port)
+        self.entry_port["width"] = 5
         self.entry_port.pack(side="left")
 
-        button_connect = Button(
-            self.head_box, text="快速连接", width=10, command=self.ftp_login)
+        button_connect = Button(self.quickbar_box, text="快速连接")
+        button_connect["command"] = self.ftp_login
+        button_connect["width"] = 10
         button_connect.pack(side="left")
 
-    def init_btns(self):
+    def init_toolbar(self):
+        """工具栏"""
 
-        button_connect = Button(
-            self.btn_box, text="快速连接", command=self.ftp_login)
+        button_connect = Button(self.toolbar_box, text="快速连接")
+        button_connect["command"] = self.ftp_login
         button_connect.pack(side="left")
 
-        button_disconnect = Button(
-            self.btn_box, text="断开", command=self.ftp_quit)
+        button_disconnect = Button(self.toolbar_box, text="断开")
+        button_disconnect["command"] = self.ftp_quit
         button_disconnect.pack(side="left")
 
-        button_reflash = Button(
-            self.btn_box, text="刷新", command=self.flash_remote)
+        button_reflash = Button(self.toolbar_box, text="刷新")
+        button_reflash["command"] = self.flash_remote
         button_reflash.pack(side="left")
 
     def init_remote(self):
         """远程文件列表"""
 
-        btns = Frame(self.remote_box, relief="ridge", borderwidth=0)
-        btns.pack(fill="x", expand=False, side="top")
-        Label(btns, text="远程:").pack(fill="x", expand=None, side="left")
-        Entry(
-            btns, textvariable=self.path_remote).pack(
-                fill="x", expand=None, side="left")
+        btn_bar = Frame(self.remote_box, relief="ridge", bd=1)
+        btn_bar.pack(fill="x", expand=False, side="top")
+        Label(btn_bar, text="远程:").pack(fill="x", expand=None, side="left")
+        path = Entry(btn_bar, textvariable=self.path_remote)
+        path.pack(fill="x", expand=True, side="left")
+
         Button(
-            btns, text="打开", command=self.select_path_remote).pack(
+            btn_bar, text="打开", command=self.select_path_remote).pack(
                 fill="x", expand=None, side="left")
-        Button(btns, text="重连", command=self.ftp_login).pack(side="left")
-        Button(btns, text="断开", command=self.ftp_quit).pack(side="left")
+        Button(btn_bar, text="重连", command=self.ftp_login).pack(side="left")
+        Button(btn_bar, text="断开", command=self.ftp_quit).pack(side="left")
         Button(
-            btns, text="刷新", command=self.flash_remote).pack(
+            btn_bar, text="刷新", command=self.flash_remote).pack(
                 fill="x", expand=None, side="right")
 
-        file_list = Frame(self.remote_box, relief="ridge", borderwidth=0)
+        file_list = Frame(self.remote_box, relief="ridge", bd=0)
         file_list.pack(fill="both", expand=True, side="top")
         # Listbox
         # self.filelist_remote = Listbox(self.remote_box)
@@ -164,12 +178,12 @@ class ftp_client():
     def init_local(self):
         """本地文件列表"""
 
-        btns = Frame(self.local_box, relief="ridge", borderwidth=0)
+        btns = Frame(self.local_box, relief="ridge", bd=0)
         btns.pack(fill="x", expand=False, side="top")
         Label(btns, text="本地:").pack(fill="x", expand=None, side="left")
         Entry(
             btns, textvariable=self.path_local).pack(
-                fill="x", expand=None, side="left")
+                fill="x", expand=True, side="left")
         Button(
             btns, text="打开", command=self.select_path_local).pack(
                 fill="x", expand=None, side="left")
@@ -182,64 +196,21 @@ class ftp_client():
         self.filelist_local.pack(fill="both", expand=True, side="top")
 
     def init_footer(self):
+        """底部状态栏"""
 
         Label(self.footer_box, text="欢迎使用").pack(side="left")
         Label(self.footer_box, text="欢迎使用").pack(fill="x", side="left")
-        self.clock = Label(
-            self.footer_box,
-            text=time.strftime('%Y-%m-%d %H:%M:%S',
-                               time.localtime(time.time())))
+        ct = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        self.clock = Label(self.footer_box, text=ct)
         self.clock.pack(side="right")
         self.clock.after(1000, self.trickit)
         self.trickit()
 
     def trickit(self):
-        currentTime = time.strftime('%Y-%m-%d %H:%M:%S',
-                                    time.localtime(time.time()))
-        self.clock["text"] = currentTime
+        ct = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        self.clock["text"] = ct
         self.clock.update()
         self.clock.after(1000, self.trickit)
-
-    def init_menu(self):
-
-        self.menubar = Menu(self.root)
-
-        self.menu_f = Menu(self.menubar, tearoff=0)
-        for each in ["打开", "保存", "另存为", "关闭"]:
-            self.menu_f.add_command(label=each)
-        self.menu_f.add_separator()
-        self.menu_f.add_command(label="退出", command=self.quit)
-        self.menubar.add_cascade(label="文件", menu=self.menu_f)
-
-        self.menu_e = Menu(self.menubar, tearoff=0)
-        for each in ["复制", "剪切", "粘贴"]:
-            self.menu_e.add_command(label=each)
-        self.menubar.add_cascade(label="编辑", menu=self.menu_e)
-
-        self.menu_v = Menu(self.menubar, tearoff=0)
-        self.menu_v.add_command(label="状态")
-        self.menubar.add_cascade(label="查看", menu=self.menu_v)
-
-        self.t_menu = Menu(self.menubar)
-        self.t_menu.add_command(label="状态", accelerator='Alt+H')
-        self.menubar.add_cascade(label="传输", menu=self.t_menu)
-
-        self.menu_s = Menu(self.menubar)
-        self.menu_s.add_command(label="状态", accelerator='Ctrl+N')
-        self.menubar.add_cascade(label="服务器", menu=self.menu_s)
-
-        self.menu_b = Menu(self.menubar)
-        self.menu_b.add_command(label="状态")
-        self.menubar.add_cascade(label="书签", menu=self.menu_b)
-
-        self.menu_h = Menu(self.menubar, tearoff=1)
-        self.menu_h.add_separator()
-        self.menu_h.add_command(label="版本信息")
-        self.menu_h.add_separator()
-        self.menu_h.add_command(label="关于我们")
-        self.menubar.add_cascade(label="帮助", menu=self.menu_h)
-
-        self.root["menu"] = self.menubar
 
     def ftp_login(self):
         self.ftp_connect.connect(self.var_address.get().strip(),
@@ -319,9 +290,6 @@ class ftp_client():
         y_co = (h_s - height) / 2 - 50
         window.geometry("%dx%d+%d+%d" % (width, height, x_co, y_co))
         window.minsize(width, height)
-
-# def main():
-#     ftp_client()
 
 if __name__ == "__main__":
     ftp_client()
