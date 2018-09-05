@@ -19,9 +19,10 @@ class ftp_client():
         self.root = master
 
         self.root.title(glv.get_variable("APP_NAME"))
-        set_window_center(self.root, 800, 600)
         self.root.minsize(800, 600)
-        # self.root.resizable(False, False)
+        set_window_center(self.root, 800, 600)
+        self.root.resizable(False, False)
+        self.root.update()
 
         self.var_port = IntVar(value=3333)
         self.var_address = StringVar(value="0.0.0.0")
