@@ -3,6 +3,7 @@
 """菜单"""
 
 from tkinter import Menu
+from window import win_about
 
 
 class AppMenu():
@@ -20,6 +21,8 @@ class AppMenu():
 
         self.init_menu()
 
+        self.window_about = None
+
     def init_menu(self):
 
         menu_bar = Menu(self.root)
@@ -30,6 +33,7 @@ class AppMenu():
         self.init_menu_view()
         self.init_menu_server()
         self.init_menu_bookmark()
+        self.init_menu_window()
         self.init_menu_help()
 
         self.root["menu"] = menu_bar
@@ -57,7 +61,7 @@ class AppMenu():
         menu_file.add_command(label="显示正在被编辑的文件")
         menu_file.add_separator()
         menu_file.add_command(label="退出", command=self.app_exit)
-        self.menu_bar.add_cascade(label="文件(F)", menu=menu_file)
+        self.menu_bar.add_cascade(label="文件", menu=menu_file)
         self.menu_file = menu_file
 
     def init_menu_edit(self):
@@ -84,7 +88,7 @@ class AppMenu():
         menu_edit.add_separator()
         menu_edit.add_command(label="删除")
         menu_edit.add_command(label="移到回收站")
-        self.menu_bar.add_cascade(label="编辑(E)", menu=menu_edit)
+        self.menu_bar.add_cascade(label="编辑", menu=menu_edit)
         self.menu_edit = menu_edit
 
     def init_menu_view(self):
@@ -105,7 +109,7 @@ class AppMenu():
         menu_sort.add_command(label="修改时间")
         menu_view.add_cascade(label="排序", menu=menu_sort)
 
-        self.menu_bar.add_cascade(label="查看(V)", menu=menu_view)
+        self.menu_bar.add_cascade(label="查看", menu=menu_view)
         self.menu_view = menu_view
 
     def init_menu_server(self):
@@ -131,7 +135,7 @@ class AppMenu():
         menu_server.add_command(label="显示隐藏文件", accelerator="Ctrl+N")
         menu_server.add_separator()
         menu_server.add_command(label="连接信息")
-        self.menu_bar.add_cascade(label="服务器(S)", menu=menu_server)
+        self.menu_bar.add_cascade(label="服务器", menu=menu_server)
         self.menu_server = menu_server
 
     def init_menu_bookmark(self):
@@ -143,19 +147,19 @@ class AppMenu():
         menu_bookmark.add_command(label="导入书签", accelerator="Ctrl+I")
         menu_bookmark.add_cascade(label="最近连接")
         self.menu_bookmark = menu_bookmark
-        self.menu_bar.add_cascade(label="书签(B)", menu=menu_bookmark)
+        self.menu_bar.add_cascade(label="书签", menu=menu_bookmark)
 
     def init_menu_window(self):
 
         menu_window = Menu(self.menu_bar)
-        menu_window.add_command(label="最小化", accelerator="Command+H")
+        menu_window.add_command(label="最小化", accelerator="Command+H", command=self.app_mini)
         menu_window.add_command(label="缩放")
         menu_window.add_separator()
         menu_window.add_command(label="置顶")
         menu_window.add_separator()
         menu_window.add_command(label="123")
         menu_window.add_command(label="345")
-        self.menu_bar.add_cascade(label="窗口(W)", menu=menu_window)
+        self.menu_bar.add_cascade(label="窗口", menu=menu_window)
         self.menu_window = menu_window
 
     def init_menu_help(self):
@@ -166,9 +170,24 @@ class AppMenu():
         menu_help.add_separator()
         menu_help.add_command(label="获得帮助", accelerator="Ctrl+G")
         menu_help.add_command(label="报告问题", accelerator="Ctrl+R")
-        menu_help.add_command(label="关于我们", accelerator="Ctrl+A")
+        menu_help.add_command(label="关于我们", accelerator="Ctrl+A", command=self.about)
         self.menu_help = menu_help
         self.menu_bar.add_cascade(label="帮助", menu=menu_help)
 
     def app_exit(self):
         self.root.quit()
+
+    def app_mini(self):
+        self.root.iconify()
+
+    def about(self):
+        if self.window_about is not None:
+            # self.window_about.destroy()
+            print("已打开")
+        else:
+            self.window_about = win_about.About(self.root)
+            self.window_about.protocol(name="WM_DELETE_WINDOW", func=self.close_about)	
+
+    def close_about(self):
+        self.window_about.destroy()
+        self.window_about = None

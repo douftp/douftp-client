@@ -9,17 +9,19 @@ from tkinter import (Button, Entry, Frame, IntVar, Label, Listbox, Menu,
                      StringVar, Tk, filedialog)
 from tkinter.ttk import Scrollbar, Treeview
 
-from menu import AppMenu
+from lib.functions import set_window_center
+import lib.global_variable as glv
+from components import app_menu
+
 
 class ftp_client():
-    def __init__(self):
-        root = Tk()
-        self.root = root
+    def __init__(self, master):
+        self.root = master
 
-        root.title("FTP客户端GUI")
-        self.set_window_center(root, 800, 600)
-        root.minsize(800, 600)
-        # root.resizable(False, False)
+        self.root.title(glv.get_variable("APP_NAME"))
+        set_window_center(self.root, 800, 600)
+        self.root.minsize(800, 600)
+        # self.root.resizable(False, False)
 
         self.var_port = IntVar(value=3333)
         self.var_address = StringVar(value="0.0.0.0")
@@ -41,12 +43,10 @@ class ftp_client():
         self.ftp_connect = FTP()
         self.init_view()
 
-        root.mainloop()
-
     def init_view(self):
         """界面"""
 
-        AppMenu(self.root)
+        app_menu.AppMenu(self.root)
         self.init_frame()
         self.init_toolbar()
         self.init_header()
@@ -70,7 +70,7 @@ class ftp_client():
         self.footer_box.pack(fill="x", expand=None, side="bottom", anchor="s")
 
         # 主要内容视图容器
-        self.content_box = Frame(self.root, relief="ridge", bd=1)
+        self.content_box = Frame(self.root, relief="ridge", bd=0)
         self.content_box.pack(fill="both", expand=True)
 
         # 远程服务端文件列表
@@ -178,7 +178,7 @@ class ftp_client():
     def init_local(self):
         """本地文件列表"""
 
-        btns = Frame(self.local_box, relief="ridge", bd=0)
+        btns = Frame(self.local_box, relief="ridge", bd=1)
         btns.pack(fill="x", expand=False, side="top")
         Label(btns, text="本地:").pack(fill="x", expand=None, side="left")
         Entry(
@@ -279,17 +279,3 @@ class ftp_client():
 
     def quit(self):
         self.root.quit()
-
-    def set_window_center(self, window, width, height):
-        """设置窗口宽高及居中"""
-        # 获取屏幕 宽、高
-        w_s = window.winfo_screenwidth()
-        h_s = window.winfo_screenheight()
-        # 计算 x, y 位置
-        x_co = (w_s - width) / 2
-        y_co = (h_s - height) / 2 - 50
-        window.geometry("%dx%d+%d+%d" % (width, height, x_co, y_co))
-        window.minsize(width, height)
-
-if __name__ == "__main__":
-    ftp_client()
