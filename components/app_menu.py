@@ -154,11 +154,13 @@ class AppMenu():
         menu_window = Menu(self.menu_bar)
         menu_window.add_command(label="最小化", accelerator="Command+H", command=self.app_mini)
         menu_window.add_command(label="缩放")
+
         menu_window.add_separator()
+        menu_window.add_command(label="全屏")
         menu_window.add_command(label="置顶")
         menu_window.add_separator()
-        menu_window.add_command(label="123")
-        menu_window.add_command(label="345")
+        menu_window.add_command(label="12323456")
+        menu_window.add_command(label="343453455")
         self.menu_bar.add_cascade(label="窗口", menu=menu_window)
         self.menu_window = menu_window
 
@@ -189,5 +191,6 @@ class AppMenu():
             self.window_about.protocol(name="WM_DELETE_WINDOW", func=self.close_about)	
 
     def close_about(self):
-        self.window_about.destroy()
+        print("已关闭-关于")
+        # self.window_about.destroy()
         self.window_about = None
