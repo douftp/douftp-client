@@ -2,5 +2,5 @@
 # -*- coding: UTF-8 -*-
 
 __all__ = [
-    "win_about"
+    "about"
 ]

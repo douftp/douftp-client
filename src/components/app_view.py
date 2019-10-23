@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-"""FTP客户端GUI"""
+"""DOUFTP CLIENT GUI VIEW"""
 
 import os
 import time
@@ -9,19 +9,19 @@ from tkinter import (Button, Entry, Frame, IntVar, Label, Listbox, Menu,
                      StringVar, Tk, filedialog)
 from tkinter.ttk import Scrollbar, Treeview
 
-from lib.functions import set_window_center
-import lib.global_variable as glv
+import libs.global_variable as glv
 from components import app_menu
+from libs.functions import set_window_center
 
 
 class ftp_client():
     def __init__(self, master):
         self.root = master
 
-        self.root.title(glv.get_variable("APP_NAME"))
+        self.root.title(glv._get("APP_NAME"))
         self.root.minsize(800, 600)
-        set_window_center(self.root, 800, 600)
-        self.root.resizable(False, False)
+        set_window_center(self.root, 900, 600)
+        # self.root.resizable(False, False)
         self.root.update()
 
         self.var_port = IntVar(value=3333)
@@ -84,6 +84,8 @@ class ftp_client():
 
     def init_header(self):
         """头部栏"""
+        if not self.quickbar_box:
+            return False
 
         Label(self.quickbar_box, text="主机:").pack(side="left")
         self.entry_ip = Entry(self.quickbar_box, textvariable=self.var_address)
@@ -111,6 +113,9 @@ class ftp_client():
     def init_toolbar(self):
         """工具栏"""
 
+        if not self.toolbar_box:
+            return False
+
         button_connect = Button(self.toolbar_box, text="快速连接")
         button_connect["command"] = self.ftp_login
         button_connect.pack(side="left")
@@ -123,8 +128,47 @@ class ftp_client():
         button_reflash["command"] = self.flash_remote
         button_reflash.pack(side="left")
 
+        button_transfer = Button(self.toolbar_box, text="传输")
+        # button_transfer["command"] = self.flash_remote
+        button_transfer.pack(side="left")
+
+        button_suspend = Button(self.toolbar_box, text="暂停")
+        # button_suspend["command"] = self.flash_remote
+        button_suspend.pack(side="left")
+
+        button_stop = Button(self.toolbar_box, text="停止")
+        # button_stop["command"] = self.flash_remote
+        button_stop.pack(side="left")
+
+        button_new_folder = Button(self.toolbar_box, text="新建文件夹")
+        # button_new_folder["command"] = self.flash_remote
+        button_new_folder.pack(side="left")
+
+        button_new_file = Button(self.toolbar_box, text="新建文件")
+        # button_new_file["command"] = self.flash_remote
+        button_new_file.pack(side="left")
+
+        button_edit = Button(self.toolbar_box, text="编辑")
+        # button_edit["command"] = self.flash_remote
+        button_edit.pack(side="left")
+
+        button_preview = Button(self.toolbar_box, text="预览")
+        # button_preview["command"] = self.flash_remote
+        button_preview.pack(side="left")
+
+        button_introduction = Button(self.toolbar_box, text="属性")
+        # button_introduction["command"] = self.flash_remote
+        button_introduction.pack(side="left")
+
+        button_delete = Button(self.toolbar_box, text="删除")
+        # button_delete["command"] = self.flash_remote
+        button_delete.pack(side="left")
+
     def init_remote(self):
         """远程文件列表"""
+
+        if not self.remote_box:
+            return False
 
         btn_bar = Frame(self.remote_box, relief="ridge", bd=1)
         btn_bar.pack(fill="x", expand=False, side="top")
@@ -179,6 +223,9 @@ class ftp_client():
     def init_local(self):
         """本地文件列表"""
 
+        if not self.local_box:
+            return False
+
         btns = Frame(self.local_box, relief="ridge", bd=1)
         btns.pack(fill="x", expand=False, side="top")
         Label(btns, text="本地:").pack(fill="x", expand=None, side="left")
@@ -198,6 +245,9 @@ class ftp_client():
 
     def init_footer(self):
         """底部状态栏"""
+
+        if not self.footer_box:
+            return False
 
         Label(self.footer_box, text="欢迎使用").pack(side="left")
         Label(self.footer_box, text="欢迎使用").pack(fill="x", side="left")

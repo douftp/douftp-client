@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-"""菜单"""
+"""DOUFTP CLIENT GUI MENU"""
 
 from tkinter import Menu
-from window import win_about
+from window import about as win_about
 
 
 class AppMenu():

@@ -9,8 +9,8 @@ from tkinter.font import Font
 
 from PIL import Image, ImageTk
 
-import lib.global_variable as glv
-from lib.functions import set_window_center
+import libs.global_variable as glv
+from libs.functions import set_window_center
 
 
 class About(Toplevel):
@@ -22,19 +22,19 @@ class About(Toplevel):
         set_window_center(root, 400, 400)
         root.resizable(False, False)
 
-        self.app_name = glv.get_variable("APP_NAME")
-        self.app_version = glv.get_variable("APP_VERSION")
-        self.app_desc = "简述简述简述简述简述简述"
-        self.app_url = "https://crogram.com"
-        self.app_copyright = "Copyright © 2018 Crogram, Inc. All rights reserved."
+        self.app_name = glv._get("APP_NAME")
+        self.app_version = glv._get("APP_VERSION")
+        self.app_desc = "开源 免费 安全"
+        self.app_url = "http://douftp.com"
+        self.app_copyright = "Copyright © 2019 DouFTP All rights reserved."
 
         self.root = root
-        self.init_page()
+        self.init_page_about()
 
-    def init_page(self):
+    def init_page_about(self):
         """加载控件"""
 
-        # image_file = os.path.join(glv.get_variable("APP_PATH"), "resource", "image", "crogram.png")
+        # image_file = os.path.join(glv._get("APP_PATH"), "resource", "image", "crogram.png")
         # print(image_file)
         # img = Image.open(image_file)  # 打开图片
         # image = ImageTk.PhotoImage(img)  # 用PIL模块的PhotoImage打开
