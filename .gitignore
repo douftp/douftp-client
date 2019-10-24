@@ -102,3 +102,14 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# ide
+.vscode/
+.DS_Store
+.settings
+.buildpath
+.cache
+.idea
+.netbeans
+.DS_Store
+.vscode
